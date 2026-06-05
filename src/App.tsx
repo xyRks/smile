@@ -7,6 +7,7 @@ import { AppLayout } from './components/layout/AppLayout';
 import { Login } from './pages/auth/Login';
 import { Register } from './pages/auth/Register';
 import { Dashboard } from './pages/dashboard/Dashboard';
+import { Profile } from './pages/profile/Profile';
 
 // Placeholder Pages
 import { NewEntry } from "./pages/entry/NewEntry";
@@ -46,6 +47,8 @@ function AnimatedRoutes() {
         <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
         <Route path="/friends" element={<ProtectedRoute><Friends /></ProtectedRoute>} />
         <Route path="/friends/:id" element={<ProtectedRoute><FriendHistory /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />

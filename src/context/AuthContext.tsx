@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 import { User } from '@/types';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,20 +21,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [users, setUsers] = useLocalStorage<User[]>('mood_diary_users', []);
   const [currentUserId, setCurrentUserId] = useLocalStorage<string | null>('mood_diary_current_user', null);
 
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    if (currentUserId && users.length > 0) {
-      const foundUser = users.find(u => u.id === currentUserId);
-      // Ensure backwards compatibility with users created before the friends feature
-      if (foundUser && !foundUser.friends) {
-        foundUser.friends = [];
-      }
-      setUser(foundUser || null);
-    } else {
-      setUser(null);
-    }
-  }, [currentUserId, users]);
+  // We are removing the redundant `user` state derived from `users` and computing it directly to avoid the useEffect warning.
+  const user = currentUserId ? users.find(u => u.id === currentUserId) || null : null;
 
   const login = (username: string, passwordHash: string) => {
     const foundUser = users.find(u => u.username === username && u.passwordHash === passwordHash);
@@ -58,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       avatarUrl: `https://api.dicebear.com/7.x/notionists/svg?seed=${username}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
       theme: 'dark',
       createdAt: Date.now(),
-      friends: [],
+      friends: []
     };
 
     setUsers([...users, newUser]);
@@ -71,31 +59,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const switchUser = (userId: string) => {
-    if (users.some(u => u.id === userId)) {
-      setCurrentUserId(userId);
-    }
+    setCurrentUserId(userId);
   };
 
   const updateProfile = (updates: Partial<User>) => {
-    if (!user) return;
-
-    const updatedUser = { ...user, ...updates };
-    setUsers(users.map(u => u.id === user.id ? updatedUser : u));
-    setUser(updatedUser);
+    if (!currentUserId) return;
+    setUsers(users.map(u => u.id === currentUserId ? { ...u, ...updates } : u));
   };
 
   const addFriend = (friendId: string) => {
-    if (!user) return;
-    if (user.friends?.includes(friendId)) return;
-
-    const currentFriends = user.friends || [];
-    updateProfile({ friends: [...currentFriends, friendId] });
+    if (!currentUserId || currentUserId === friendId) return;
+    setUsers(prevUsers => prevUsers.map(u => {
+      if (u.id === currentUserId) {
+        const friends = u.friends || [];
+        if (!friends.includes(friendId)) {
+          return { ...u, friends: [...friends, friendId] };
+        }
+      }
+      return u;
+    }));
   };
 
   const removeFriend = (friendId: string) => {
-    if (!user || !user.friends) return;
-
-    updateProfile({ friends: user.friends.filter(id => id !== friendId) });
+    if (!currentUserId) return;
+    setUsers(prevUsers => prevUsers.map(u => {
+      if (u.id === currentUserId) {
+        return { ...u, friends: (u.friends || []).filter(id => id !== friendId) };
+      }
+      return u;
+    }));
   };
 
   return (
@@ -105,10 +97,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export const useAuth = () => {
+export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-};
+}
