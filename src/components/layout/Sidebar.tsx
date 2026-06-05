@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, PlusCircle, Calendar, PieChart, Clock, Settings, LogOut, Users } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, Calendar, PieChart, Clock, Settings, LogOut, Users , User} from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,6 +12,7 @@ const navItems = [
   { icon: PieChart, label: 'Insights', path: '/analytics' },
   { icon: Clock, label: 'History', path: '/history' },
   { icon: Users, label: 'Friends', path: '/friends' },
+  { icon: User, label: 'Profile', path: '/profile' },
 ];
 
 export function Sidebar() {
@@ -87,7 +88,7 @@ export function Sidebar() {
       {/* Mobile Bottom Nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-card border-t border-border pb-safe">
         <div className="flex items-center justify-around p-2">
-          {navItems.filter(item => ['/', '/new-entry', '/calendar', '/friends'].includes(item.path)).map((item) => {
+          {navItems.filter(item => ['/', '/new-entry', '/calendar', '/friends', '/profile'].includes(item.path)).map((item) => {
             const isActive = location.pathname === item.path || (item.path === '/friends' && location.pathname.startsWith('/friends/'));
             const Icon = item.icon;
             return (
