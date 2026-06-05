@@ -9,6 +9,30 @@ import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+
+// Holiday data
+const holidays: Record<string, { title: string; icon: string }> = {
+  '01-01': { title: 'Новый год', icon: '🎄' },
+  '01-07': { title: 'Рождество Христово', icon: '✨' },
+  '01-25': { title: 'День студента', icon: '📚' },
+  '02-14': { title: 'День Святого Валентина', icon: '💖' },
+  '02-23': { title: 'День защитника Отечества', icon: '🎖️' },
+  '03-08': { title: 'Международный женский день', icon: '🌷' },
+  '04-01': { title: 'День смеха', icon: '😂' },
+  '04-12': { title: 'День космонавтики', icon: '🚀' },
+  '05-01': { title: 'Праздник Весны и Труда', icon: '🌸' },
+  '05-09': { title: 'День Победы', icon: '🕊️' },
+  '06-01': { title: 'День защиты детей', icon: '🎈' },
+  '09-01': { title: 'День знаний', icon: '🏫' },
+  '10-31': { title: 'Хэллоуин', icon: '🎃' },
+  '12-31': { title: 'Канун Нового года', icon: '🍾' },
+};
+
+const getTodayHoliday = () => {
+  const today = format(new Date(), 'MM-dd');
+  return holidays[today] || { title: 'День хорошего настроения', icon: '☀️' };
+};
+
 // Helper to get mood emoji
 const getMoodEmoji = (mood: string) => {
   switch (mood) {
@@ -243,6 +267,19 @@ export function Dashboard() {
 
         {/* Motivation / Tips Sidebar */}
         <div className="space-y-6">
+          {/* Holiday Card */}
+          <Card className="glass-card border-none overflow-hidden relative bg-gradient-to-br from-primary/5 to-primary/10">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <span>🎉</span> Сегодняшний праздник
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex items-center gap-4">
+              <div className="text-4xl drop-shadow-sm">{getTodayHoliday().icon}</div>
+              <p className="font-semibold text-lg">{getTodayHoliday().title}</p>
+            </CardContent>
+          </Card>
+
           <Card className="glass-card border-none overflow-hidden relative">
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
             <CardHeader>
