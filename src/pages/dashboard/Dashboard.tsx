@@ -1,3 +1,4 @@
+import { MysticWidget } from '@/components/mystic/MysticWidget';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -242,6 +243,8 @@ export function Dashboard() {
         </div>
 
         {/* Motivation / Tips Sidebar */}
+          <MysticWidget />
+
         <div className="space-y-6">
           <Card className="glass-card border-none overflow-hidden relative">
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
