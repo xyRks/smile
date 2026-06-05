@@ -18,6 +18,7 @@ export interface User {
   avatarUrl: string;
   theme: 'light' | 'dark' | 'system';
   createdAt: number;
+  friends?: string[]; // Array of friend user IDs
 }
 
 export interface AuthState {
