@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -39,24 +39,24 @@ export function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  const monthStart = startOfMonth(currentDate);
-  const monthEnd = endOfMonth(currentDate);
-  const startDate = monthStart;
-  const endDate = monthEnd;
-
-  // Add padding days for visual calendar grid
-  const startDay = startDate.getDay();
-  const paddingDays = Array.from({ length: startDay === 0 ? 6 : startDay - 1 }).map((_, _i) => null);
-
-  const days = eachDayOfInterval({ start: startDate, end: endDate });
+  const { monthStart, paddingDays, days } = useMemo(() => {
+    const start = startOfMonth(currentDate);
+    const end = endOfMonth(currentDate);
+    const startD = start.getDay();
+    const padding = Array.from({ length: startD === 0 ? 6 : startD - 1 }).map(() => null);
+    const d = eachDayOfInterval({ start, end });
+    return { monthStart: start, paddingDays: padding, days: d };
+  }, [currentDate]);
 
   const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
   const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
 
   // Find entries for selected date
-  const selectedEntries = selectedDate
-    ? entries.filter(e => isSameDay(new Date(e.timestamp), selectedDate))
-    : [];
+  const selectedEntries = useMemo(() => {
+    return selectedDate
+      ? entries.filter(e => isSameDay(new Date(e.timestamp), selectedDate))
+      : [];
+  }, [entries, selectedDate]);
 
   return (
     <PageTransition className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8">

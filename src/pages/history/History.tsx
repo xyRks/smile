@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { format } from 'date-fns';
 import { useMoodData } from '@/hooks/useMoodData';
@@ -101,12 +101,14 @@ export function History() {
   const [displayCount, setDisplayCount] = useState(10);
 
   // Group entries by Month/Year
-  const groupedEntries = entries.reduce((acc, entry) => {
-    const monthYear = format(new Date(entry.timestamp), 'MMMM yyyy');
-    if (!acc[monthYear]) acc[monthYear] = [];
-    acc[monthYear].push(entry);
-    return acc;
-  }, {} as Record<string, MoodEntry[]>);
+  const groupedEntries = useMemo(() => {
+    return entries.reduce((acc, entry) => {
+      const monthYear = format(new Date(entry.timestamp), 'MMMM yyyy');
+      if (!acc[monthYear]) acc[monthYear] = [];
+      acc[monthYear].push(entry);
+      return acc;
+    }, {} as Record<string, MoodEntry[]>);
+  }, [entries]);
 
   const handleLoadMore = () => {
     setDisplayCount(prev => prev + 10);

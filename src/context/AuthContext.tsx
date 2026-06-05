@@ -22,13 +22,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+
     if (currentUserId && users.length > 0) {
       const foundUser = users.find(u => u.id === currentUserId);
-      setUser(foundUser || null);
-    } else {
+      if (user?.id !== foundUser?.id) {
+         setUser(foundUser || null);
+      }
+    } else if (user !== null) {
+
       setUser(null);
     }
-  }, [currentUserId, users]);
+  }, [currentUserId, users, user]);
 
   const login = (username: string, passwordHash: string) => {
     const foundUser = users.find(u => u.username === username && u.passwordHash === passwordHash);
