@@ -46,7 +46,7 @@ export function Calendar() {
 
   // Add padding days for visual calendar grid
   const startDay = startDate.getDay();
-  const paddingDays = Array.from({ length: startDay === 0 ? 6 : startDay - 1 }).map((_, _i) => null);
+  const paddingDays = Array.from({ length: startDay === 0 ? 6 : startDay - 1 }).map(() => null);
 
   const days = eachDayOfInterval({ start: startDate, end: endDate });
 

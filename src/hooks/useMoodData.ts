@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { MoodEntry } from '@/types';
 import { useAuth } from '@/context/AuthContext';
@@ -7,18 +7,14 @@ import { v4 as uuidv4 } from 'uuid';
 export function useMoodData() {
   const { user } = useAuth();
   const [allEntries, setAllEntries] = useLocalStorage<MoodEntry[]>('mood_diary_entries', []);
-  const [userEntries, setUserEntries] = useState<MoodEntry[]>([]);
-
-  // Filter entries for current user
-  useEffect(() => {
+  const userEntries = useMemo(() => {
     if (user) {
       const filtered = allEntries.filter(entry => entry.userId === user.id);
       // Sort by descending timestamp (newest first)
       filtered.sort((a, b) => b.timestamp - a.timestamp);
-      setUserEntries(filtered);
-    } else {
-      setUserEntries([]);
+      return filtered;
     }
+    return [];
   }, [allEntries, user]);
 
   const addEntry = (entry: Omit<MoodEntry, 'id' | 'userId' | 'timestamp'>) => {

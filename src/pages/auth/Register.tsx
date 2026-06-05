@@ -60,7 +60,7 @@ export function Register() {
               type="text"
               placeholder="e.g. John Doe"
               value={displayName}
-              onChange={(e: any) => setDisplayName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDisplayName(e.target.value)}
               className="bg-background/50 backdrop-blur-sm border-white/20 focus-visible:ring-primary h-12"
             />
           </div>
@@ -72,7 +72,7 @@ export function Register() {
               type="text"
               placeholder="Unique identifier"
               value={username}
-              onChange={(e: any) => setUsername(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
               required
               className="bg-background/50 backdrop-blur-sm border-white/20 focus-visible:ring-primary h-12"
             />
@@ -84,7 +84,7 @@ export function Register() {
               id="password"
               type="password"
               value={password}
-              onChange={(e: any) => setPassword(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               required
               className="bg-background/50 backdrop-blur-sm border-white/20 focus-visible:ring-primary h-12"
             />

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 import { User } from '@/types';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { v4 as uuidv4 } from 'uuid';
@@ -19,15 +19,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [users, setUsers] = useLocalStorage<User[]>('mood_diary_users', []);
   const [currentUserId, setCurrentUserId] = useLocalStorage<string | null>('mood_diary_current_user', null);
 
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
+  const user = useMemo(() => {
     if (currentUserId && users.length > 0) {
-      const foundUser = users.find(u => u.id === currentUserId);
-      setUser(foundUser || null);
-    } else {
-      setUser(null);
+      return users.find(u => u.id === currentUserId) || null;
     }
+    return null;
   }, [currentUserId, users]);
 
   const login = (username: string, passwordHash: string) => {
@@ -74,7 +70,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const updatedUser = { ...user, ...updates };
     setUsers(users.map(u => u.id === user.id ? updatedUser : u));
-    setUser(updatedUser);
   };
 
   return (
@@ -84,6 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

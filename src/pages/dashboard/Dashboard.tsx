@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { format, isToday, isYesterday, startOfWeek, addDays } from 'date-fns';
@@ -37,21 +37,17 @@ const getMoodColor = (mood: string) => {
 export function Dashboard() {
   const { user } = useAuth();
   const { entries } = useMoodData();
-  const [greeting, setGreeting] = useState('');
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+  }, []);
 
   // Calculate streak
-  const [streak, setStreak] = useState(0);
-
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting('Good morning');
-    else if (hour < 18) setGreeting('Good afternoon');
-    else setGreeting('Good evening');
-
-    // Simple streak calculation
+  const streak = useMemo(() => {
     let currentStreak = 0;
 
-    // Sort ascending for streak check
     const sortedEntries = [...entries].sort((a, b) => a.timestamp - b.timestamp);
 
     if (sortedEntries.length > 0) {
@@ -72,7 +68,7 @@ export function Dashboard() {
         }
       }
     }
-    setStreak(currentStreak);
+    return currentStreak;
   }, [entries]);
 
   const recentEntries = entries.slice(0, 3);
