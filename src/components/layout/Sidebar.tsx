@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, PlusCircle, Calendar, PieChart, Clock, Settings, LogOut, Users, UserCircle } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, Calendar, PieChart, Clock, Settings, LogOut, Users } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,7 +12,6 @@ const navItems = [
   { icon: PieChart, label: 'Insights', path: '/analytics' },
   { icon: Clock, label: 'History', path: '/history' },
   { icon: Users, label: 'Friends', path: '/friends' },
-  { icon: UserCircle, label: 'Profile', path: '/profile' },
 ];
 
 export function Sidebar() {
@@ -22,7 +21,7 @@ export function Sidebar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 h-screen bg-card border-r border-border sticky top-0">
+      <aside className="hidden md:flex flex-col w-64 h-screen border-r border-border glass bg-background/50 sticky top-0">
         <div className="p-6">
           <h1 className="text-2xl font-bold text-gradient flex items-center gap-2">
             <span className="text-3xl">✨</span> Moodify
@@ -86,7 +85,7 @@ export function Sidebar() {
       </aside>
 
       {/* Mobile Bottom Nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border pb-safe">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-card border-t border-border pb-safe">
         <div className="flex items-center justify-around p-2">
           {navItems.filter(item => ['/', '/new-entry', '/calendar', '/friends'].includes(item.path)).map((item) => {
             const isActive = location.pathname === item.path || (item.path === '/friends' && location.pathname.startsWith('/friends/'));

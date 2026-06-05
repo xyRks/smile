@@ -10,19 +10,9 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 import { isToday } from 'date-fns';
+import { getCustomMoodIcon } from '@/components/ui/MoodIcons';
 
 // Helper to get mood emoji
-const getMoodEmoji = (mood: string) => {
-  switch (mood) {
-    case 'happy': return '😊';
-    case 'excited': return '🤩';
-    case 'neutral': return '😐';
-    case 'tired': return '😴';
-    case 'sad': return '😢';
-    case 'angry': return '😡';
-    default: return '❓';
-  }
-};
 
 
 
@@ -118,7 +108,7 @@ export function Friends() {
                              {latestMood && (
                                 <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-secondary rounded-full">
                                     <span className="text-xs text-muted-foreground font-medium">Feeling today:</span>
-                                    <span className="text-xl" title={latestMood}>{getMoodEmoji(latestMood)}</span>
+                                    <span className="text-xl" title={latestMood}>{getCustomMoodIcon(latestMood)}</span>
                                 </div>
                              )}
                             <Button asChild variant="outline" size="sm" className="hidden sm:flex">

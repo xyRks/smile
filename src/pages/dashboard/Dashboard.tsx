@@ -1,9 +1,9 @@
-import { MysticWidget } from '@/components/mystic/MysticWidget';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { format, isToday, isYesterday, startOfWeek, addDays } from 'date-fns';
 import { Plus, Flame, TrendingUp, Calendar as CalendarIcon, ArrowRight } from 'lucide-react';
+import { getCustomMoodIcon } from '@/components/ui/MoodIcons';
 import { useAuth } from '@/context/AuthContext';
 import { useMoodData } from '@/hooks/useMoodData';
 import { PageTransition } from '@/components/layout/PageTransition';
@@ -11,17 +11,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 // Helper to get mood emoji
-const getMoodEmoji = (mood: string) => {
-  switch (mood) {
-    case 'happy': return '😊';
-    case 'excited': return '🤩';
-    case 'neutral': return '😐';
-    case 'tired': return '😴';
-    case 'sad': return '😢';
-    case 'angry': return '😡';
-    default: return '❓';
-  }
-};
 
 const getMoodColor = (mood: string) => {
   switch (mood) {
@@ -118,7 +107,7 @@ export function Dashboard() {
       {/* Top Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <Card className="bg-card border-border/50 shadow-sm">
+          <Card className="glass-card border-none">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Current Streak</CardTitle>
               <Flame className={`h-5 w-5 ${streak > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
@@ -135,7 +124,7 @@ export function Dashboard() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <Card className="bg-card border-border/50 shadow-sm">
+          <Card className="glass-card border-none">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Entries</CardTitle>
               <TrendingUp className="h-5 w-5 text-teal-500" />
@@ -150,7 +139,7 @@ export function Dashboard() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="md:col-span-1">
-           <Card className="bg-card border-border/50 shadow-sm h-full bg-gradient-premium text-white">
+           <Card className="glass-card border-none h-full bg-gradient-premium text-white">
             <CardContent className="p-6 flex flex-col h-full justify-between">
               <div>
                 <h3 className="font-medium text-white/90">Your Weekly Overview</h3>
@@ -162,7 +151,7 @@ export function Dashboard() {
                   return (
                     <div key={i} className="flex flex-col items-center gap-2">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm bg-white/20 backdrop-blur-md`}>
-                        {entry ? getMoodEmoji(entry.mood) : ''}
+                        {entry ? getCustomMoodIcon(entry.mood) : ''}
                       </div>
                       <span className="text-[10px] text-white/60">{format(day, 'EEEEE')}</span>
                     </div>
@@ -195,11 +184,11 @@ export function Dashboard() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="bg-card border-border/50 shadow-sm hover:shadow-sm transition-shadow overflow-hidden group">
+                  <Card className="glass-card border-none hover:shadow-md transition-shadow overflow-hidden group">
                     <div className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-xl opacity-80" />
                     <CardContent className="p-5 flex gap-4">
                       <div className={`shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center text-3xl ${getMoodColor(entry.mood)}`}>
-                        {getMoodEmoji(entry.mood)}
+                        {getCustomMoodIcon(entry.mood)}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start mb-1">
@@ -227,7 +216,7 @@ export function Dashboard() {
               ))}
             </div>
           ) : (
-            <Card className="bg-card border-border/50 shadow-sm text-center p-12 flex flex-col items-center justify-center h-[300px]">
+            <Card className="glass-card border-none text-center p-12 flex flex-col items-center justify-center h-[300px]">
                <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mb-4">
                  <CalendarIcon className="h-10 w-10 text-muted-foreground opacity-50" />
                </div>
@@ -243,10 +232,8 @@ export function Dashboard() {
         </div>
 
         {/* Motivation / Tips Sidebar */}
-          <MysticWidget />
-
         <div className="space-y-6">
-          <Card className="bg-card border-border/50 shadow-sm overflow-hidden relative">
+          <Card className="glass-card border-none overflow-hidden relative">
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -260,7 +247,7 @@ export function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="border-none bg-accent/50 ">
+          <Card className="border-none bg-accent/50 backdrop-blur-sm">
              <CardContent className="p-6 flex items-center gap-4">
                <div className="w-12 h-12 bg-white dark:bg-black rounded-full flex items-center justify-center text-2xl shadow-sm">
                  🧘‍♀️
