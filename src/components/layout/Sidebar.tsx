@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, PlusCircle, Calendar, PieChart, Clock, Settings, LogOut, Users } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, Calendar, PieChart, Clock, Settings, LogOut, Users, UserCircle } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,6 +12,7 @@ const navItems = [
   { icon: PieChart, label: 'Insights', path: '/analytics' },
   { icon: Clock, label: 'History', path: '/history' },
   { icon: Users, label: 'Friends', path: '/friends' },
+  { icon: UserCircle, label: 'Profile', path: '/profile' },
 ];
 
 export function Sidebar() {
