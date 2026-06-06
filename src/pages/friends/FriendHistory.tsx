@@ -8,7 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MoodEntry } from '@/types';
-import { getCustomMoodIcon } from '@/components/ui/MoodIcons';
+import { BlogPostCard } from '../profile/BlogPostCard';
+import { useProfileData } from '@/hooks/useProfileData';
+
 
 // Reusing helpers
 
@@ -30,6 +32,9 @@ export function FriendHistory() {
   const { users, user } = useAuth();
 
   const friend = users.find(u => u.id === id);
+
+  const { blogPosts, addReactionBefore, addReactionAfter } = useProfileData(id);
+
 
   // Security check: ensure they are actually friends
   const isFriend = user?.friends?.includes(id || '');
@@ -125,14 +130,15 @@ export function FriendHistory() {
                       <div className="ml-auto flex items-center gap-1.5 text-xs font-medium bg-primary/5 text-primary px-2.5 py-1 rounded-md border border-primary/10">
                         <span className="text-amber-500">⚡</span> Energy: {entry.energyLevel}/5
                       </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </div>
+
     </PageTransition>
   );
 }
