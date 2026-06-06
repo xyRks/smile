@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { format, isToday, isYesterday, startOfWeek, addDays } from 'date-fns';
 import { Plus, Flame, TrendingUp, Calendar as CalendarIcon, ArrowRight } from 'lucide-react';
+import { getCustomMoodIcon } from '@/components/ui/MoodIcons';
 import { useAuth } from '@/context/AuthContext';
 import { useMoodData } from '@/hooks/useMoodData';
 import { PageTransition } from '@/components/layout/PageTransition';
@@ -34,17 +35,6 @@ const getTodayHoliday = () => {
 };
 
 // Helper to get mood emoji
-const getMoodEmoji = (mood: string) => {
-  switch (mood) {
-    case 'happy': return '😊';
-    case 'excited': return '🤩';
-    case 'neutral': return '😐';
-    case 'tired': return '😴';
-    case 'sad': return '😢';
-    case 'angry': return '😡';
-    default: return '❓';
-  }
-};
 
 const getMoodColor = (mood: string) => {
   switch (mood) {
@@ -61,21 +51,17 @@ const getMoodColor = (mood: string) => {
 export function Dashboard() {
   const { user } = useAuth();
   const { entries } = useMoodData();
-  const [greeting, setGreeting] = useState('');
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+  }, []);
 
   // Calculate streak
-  const [streak, setStreak] = useState(0);
-
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting('Good morning');
-    else if (hour < 18) setGreeting('Good afternoon');
-    else setGreeting('Good evening');
-
-    // Simple streak calculation
+  const streak = useMemo(() => {
     let currentStreak = 0;
 
-    // Sort ascending for streak check
     const sortedEntries = [...entries].sort((a, b) => a.timestamp - b.timestamp);
 
     if (sortedEntries.length > 0) {
@@ -96,7 +82,7 @@ export function Dashboard() {
         }
       }
     }
-    setStreak(currentStreak);
+    return currentStreak;
   }, [entries]);
 
   const recentEntries = entries.slice(0, 3);
@@ -185,7 +171,7 @@ export function Dashboard() {
                   return (
                     <div key={i} className="flex flex-col items-center gap-2">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm bg-white/20 backdrop-blur-md`}>
-                        {entry ? getMoodEmoji(entry.mood) : ''}
+                        {entry ? getCustomMoodIcon(entry.mood) : ''}
                       </div>
                       <span className="text-[10px] text-white/60">{format(day, 'EEEEE')}</span>
                     </div>
@@ -222,7 +208,7 @@ export function Dashboard() {
                     <div className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-xl opacity-80" />
                     <CardContent className="p-5 flex gap-4">
                       <div className={`shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center text-3xl ${getMoodColor(entry.mood)}`}>
-                        {getMoodEmoji(entry.mood)}
+                        {getCustomMoodIcon(entry.mood)}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start mb-1">

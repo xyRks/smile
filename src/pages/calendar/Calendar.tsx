@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,19 +8,9 @@ import { useMoodData } from '@/hooks/useMoodData';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { getCustomMoodIcon } from '@/components/ui/MoodIcons';
 
 // Reusing helpers
-const getMoodEmoji = (mood: string) => {
-  switch (mood) {
-    case 'happy': return '😊';
-    case 'excited': return '🤩';
-    case 'neutral': return '😐';
-    case 'tired': return '😴';
-    case 'sad': return '😢';
-    case 'angry': return '😡';
-    default: return '❓';
-  }
-};
 
 const getMoodColor = (mood: string) => {
   switch (mood) {
@@ -46,7 +36,7 @@ export function Calendar() {
 
   // Add padding days for visual calendar grid
   const startDay = startDate.getDay();
-  const paddingDays = Array.from({ length: startDay === 0 ? 6 : startDay - 1 }).map((_, _i) => null);
+  const paddingDays = Array.from({ length: startDay === 0 ? 6 : startDay - 1 }).map(() => null);
 
   const days = eachDayOfInterval({ start: startDate, end: endDate });
 
@@ -54,9 +44,11 @@ export function Calendar() {
   const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
 
   // Find entries for selected date
-  const selectedEntries = selectedDate
-    ? entries.filter(e => isSameDay(new Date(e.timestamp), selectedDate))
-    : [];
+  const selectedEntries = useMemo(() => {
+    return selectedDate
+      ? entries.filter(e => isSameDay(new Date(e.timestamp), selectedDate))
+      : [];
+  }, [entries, selectedDate]);
 
   return (
     <PageTransition className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8">
@@ -111,7 +103,7 @@ export function Calendar() {
 
                     {mainEntry && (
                       <span className="text-xl md:text-2xl mt-1 z-10 drop-shadow-md filter">
-                        {getMoodEmoji(mainEntry.mood)}
+                        {getCustomMoodIcon(mainEntry.mood)}
                       </span>
                     )}
 
@@ -159,7 +151,7 @@ export function Calendar() {
                       <CardContent className="p-4 pt-5">
                         <div className="flex justify-between items-start mb-3">
                           <div className="flex items-center gap-2">
-                             <div className="text-2xl">{getMoodEmoji(entry.mood)}</div>
+                             <div className="text-2xl">{getCustomMoodIcon(entry.mood)}</div>
                              <span className="font-medium capitalize text-lg">{entry.mood}</span>
                           </div>
                           <span className="text-xs text-muted-foreground flex items-center gap-1 bg-secondary px-2 py-1 rounded-md">

@@ -13,17 +13,6 @@ import { useProfileData } from '@/hooks/useProfileData';
 
 
 // Reusing helpers
-const getMoodEmoji = (mood: string) => {
-  switch (mood) {
-    case 'happy': return '😊';
-    case 'excited': return '🤩';
-    case 'neutral': return '😐';
-    case 'tired': return '😴';
-    case 'sad': return '😢';
-    case 'angry': return '😡';
-    default: return '❓';
-  }
-};
 
 const getMoodColor = (mood: string) => {
   switch (mood) {
@@ -84,95 +73,62 @@ export function FriendHistory() {
         </div>
       </div>
 
+      {friendEntries.length === 0 ? (
+        <Card className="glass-card border-none text-center p-12 bg-secondary/20">
+          <div className="text-6xl mb-4 opacity-50">📭</div>
+          <h3 className="text-xl font-medium mb-2">{friend.displayName} hasn't logged any moods yet.</h3>
+        </Card>
+      ) : (
+        <div className="space-y-6 md:space-y-8">
+          {friendEntries.map((entry, index) => (
+             <motion.div
+              key={entry.id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
+              className="relative pl-8 md:pl-0"
+            >
+              {/* Timeline connector line (mobile) */}
+              <div className="md:hidden absolute left-3.5 top-8 bottom-[-24px] w-0.5 bg-border z-0" />
+              <div className="md:hidden absolute left-[9px] top-6 w-3 h-3 rounded-full bg-primary ring-4 ring-background z-10" />
 
-      <div className="flex gap-4 border-b border-border pb-2 mb-6">
-        <button
-          className="pb-2 px-1 border-b-2 font-medium transition-colors border-primary text-primary"
-        >
-          <Clock className="inline-block mr-2 h-4 w-4" />
-          Mood History
-        </button>
-      </div>
+              <Card className={`glass-card border ${getMoodColor(entry.mood).split(' ')[2]} overflow-hidden hover:shadow-lg transition-all duration-300 group`}>
+                <div className={`absolute left-0 top-0 bottom-0 w-2 ${getMoodColor(entry.mood).split(' ')[0]} opacity-50`} />
 
-      <div className="space-y-12">
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Latest Blog Posts</h3>
-          {blogPosts.length === 0 ? (
-             <p className="text-muted-foreground italic">No blog posts yet.</p>
-          ) : (
-             <div className="space-y-6">
-                {blogPosts.map(post => (
-                    <BlogPostCard
-                        key={post.id}
-                        post={post}
-                        currentUserId={user?.id || ''}
-                        onReactBefore={(mood) => addReactionBefore(post.id, mood)}
-                        onReactAfter={(mood) => addReactionAfter(post.id, mood)}
-                    />
-                ))}
-             </div>
-          )}
-        </div>
+                <CardContent className="p-6 flex flex-col md:flex-row gap-6">
+                  <div className="flex flex-col md:items-center min-w-[120px] shrink-0">
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-4xl mb-3 ${getMoodColor(entry.mood).split(' ').slice(0,2).join(' ')} shadow-inner`}>
+                      {getCustomMoodIcon(entry.mood)}
+                    </div>
+                    <div className="text-sm font-medium capitalize">{entry.mood}</div>
+                    <div className="flex items-center text-xs text-muted-foreground mt-1 gap-1">
+                      <Clock className="w-3 h-3" /> {format(new Date(entry.timestamp), 'h:mm a')}
+                    </div>
+                    <div className="hidden md:block text-xs font-semibold text-primary/60 mt-1 uppercase tracking-wider">
+                       {format(new Date(entry.timestamp), 'MMM dd, yyyy')}
+                    </div>
+                  </div>
 
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Mood Timeline</h3>
-          {friendEntries.length === 0 ? (
-            <Card className="glass-card border-none text-center p-12 bg-secondary/20">
-              <div className="text-6xl mb-4 opacity-50">📭</div>
-              <h3 className="text-xl font-medium mb-2">{friend.displayName} hasn't logged any moods yet.</h3>
-            </Card>
-          ) : (
-            <div className="space-y-6 md:space-y-8">
-              {friendEntries.map((entry, index) => (
-                <motion.div
-                  key={entry.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
-                  className="relative pl-8 md:pl-0"
-                >
-                  <div className="md:hidden absolute left-3.5 top-8 bottom-[-24px] w-0.5 bg-border z-0" />
-                  <div className="md:hidden absolute left-[9px] top-6 w-3 h-3 rounded-full bg-primary ring-4 ring-background z-10" />
+                  <div className="flex-1">
+                    <div className="md:hidden text-xs font-semibold text-primary/60 mb-2 uppercase tracking-wider">
+                       {format(new Date(entry.timestamp), 'MMM dd, yyyy')}
+                    </div>
 
-                  <Card className={`glass-card border ${getMoodColor(entry.mood).split(' ')[2]} overflow-hidden hover:shadow-lg transition-all duration-300 group`}>
-                    <div className={`absolute left-0 top-0 bottom-0 w-2 ${getMoodColor(entry.mood).split(' ')[0]} opacity-50`} />
+                    {entry.note ? (
+                      <p className="text-foreground/90 leading-relaxed mb-4 text-sm md:text-base">"{entry.note}"</p>
+                    ) : (
+                      <p className="text-muted-foreground italic mb-4 text-sm">No details provided.</p>
+                    )}
 
-                    <CardContent className="p-6 flex flex-col md:flex-row gap-6">
-                      <div className="flex flex-col md:items-center min-w-[120px] shrink-0">
-                        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-4xl mb-3 ${getMoodColor(entry.mood).split(' ').slice(0,2).join(' ')} shadow-inner`}>
-                          {getMoodEmoji(entry.mood)}
-                        </div>
-                        <div className="text-sm font-medium capitalize">{entry.mood}</div>
-                        <div className="flex items-center text-xs text-muted-foreground mt-1 gap-1">
-                          <Clock className="w-3 h-3" /> {format(new Date(entry.timestamp), 'h:mm a')}
-                        </div>
-                        <div className="hidden md:block text-xs font-semibold text-primary/60 mt-1 uppercase tracking-wider">
-                          {format(new Date(entry.timestamp), 'MMM dd, yyyy')}
-                        </div>
-                      </div>
+                    <div className="flex flex-wrap items-center gap-2 mt-auto">
+                      {entry.tags && entry.tags.map(tag => (
+                        <span key={tag} className="text-xs bg-secondary text-secondary-foreground px-2.5 py-1 rounded-md">
+                          #{tag}
+                        </span>
+                      ))}
 
-                      <div className="flex-1">
-                        <div className="md:hidden text-xs font-semibold text-primary/60 mb-2 uppercase tracking-wider">
-                          {format(new Date(entry.timestamp), 'MMM dd, yyyy')}
-                        </div>
-
-                        {entry.note ? (
-                          <p className="text-foreground/90 leading-relaxed mb-4 text-sm md:text-base">"{entry.note}"</p>
-                        ) : (
-                          <p className="text-muted-foreground italic mb-4 text-sm">No details provided.</p>
-                        )}
-
-                        <div className="flex flex-wrap items-center gap-2 mt-auto">
-                          {entry.tags && entry.tags.map(tag => (
-                            <span key={tag} className="text-xs bg-secondary text-secondary-foreground px-2.5 py-1 rounded-md">
-                              #{tag}
-                            </span>
-                          ))}
-
-                          <div className="ml-auto flex items-center gap-1.5 text-xs font-medium bg-primary/5 text-primary px-2.5 py-1 rounded-md border border-primary/10">
-                            <span className="text-amber-500">⚡</span> Energy: {entry.energyLevel}/5
-                          </div>
-                        </div>
+                      <div className="ml-auto flex items-center gap-1.5 text-xs font-medium bg-primary/5 text-primary px-2.5 py-1 rounded-md border border-primary/10">
+                        <span className="text-amber-500">⚡</span> Energy: {entry.energyLevel}/5
                       </div>
                     </CardContent>
                   </Card>

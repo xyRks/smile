@@ -8,15 +8,16 @@ import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
+import { getCustomMoodIcon } from '@/components/ui/MoodIcons';
 import { Input } from '@/components/ui/input';
 
-const moods: { type: MoodType; emoji: string; label: string; color: string }[] = [
-  { type: 'happy', emoji: '😊', label: 'Happy', color: 'from-green-400 to-emerald-500' },
-  { type: 'excited', emoji: '🤩', label: 'Excited', color: 'from-yellow-400 to-amber-500' },
-  { type: 'neutral', emoji: '😐', label: 'Neutral', color: 'from-gray-400 to-slate-500' },
-  { type: 'tired', emoji: '😴', label: 'Tired', color: 'from-indigo-400 to-purple-500' },
-  { type: 'sad', emoji: '😢', label: 'Sad', color: 'from-blue-400 to-cyan-500' },
-  { type: 'angry', emoji: '😡', label: 'Angry', color: 'from-red-400 to-rose-500' },
+const moods: { type: MoodType; icon: React.ReactNode; label: string; color: string }[] = [
+  { type: 'happy', icon: getCustomMoodIcon('happy'), label: 'Happy', color: 'from-green-400 to-emerald-500' },
+  { type: 'excited', icon: getCustomMoodIcon('excited'), label: 'Excited', color: 'from-yellow-400 to-amber-500' },
+  { type: 'neutral', icon: getCustomMoodIcon('neutral'), label: 'Neutral', color: 'from-gray-400 to-slate-500' },
+  { type: 'tired', icon: getCustomMoodIcon('tired'), label: 'Tired', color: 'from-indigo-400 to-purple-500' },
+  { type: 'sad', icon: getCustomMoodIcon('sad'), label: 'Sad', color: 'from-blue-400 to-cyan-500' },
+  { type: 'angry', icon: getCustomMoodIcon('angry'), label: 'Angry', color: 'from-red-400 to-rose-500' },
 ];
 
 const presetTags = ['work', 'family', 'friends', 'health', 'hobby', 'stress', 'rest', 'exercise'];
@@ -115,7 +116,7 @@ export function NewEntry() {
                   }`}
                 >
                   <div className={`w-20 h-20 rounded-full mb-3 flex items-center justify-center text-5xl bg-gradient-to-br ${mood.color} shadow-inner`}>
-                    {mood.emoji}
+                    {mood.icon}
                   </div>
                   <span className="font-medium">{mood.label}</span>
                 </motion.button>
@@ -134,7 +135,7 @@ export function NewEntry() {
           >
             <div className="flex items-center gap-4 mb-6">
               <div className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl bg-gradient-to-br ${moods.find(m => m.type === selectedMood)?.color} shadow-inner`}>
-                {moods.find(m => m.type === selectedMood)?.emoji}
+                {moods.find(m => m.type === selectedMood)?.icon}
               </div>
               <div>
                 <h2 className="text-2xl font-bold">Add details</h2>
