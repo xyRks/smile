@@ -4,21 +4,11 @@ import { format } from 'date-fns';
 import { useMoodData } from '@/hooks/useMoodData';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { Card, CardContent } from '@/components/ui/card';
+import { getCustomMoodIcon } from '@/components/ui/MoodIcons';
 import { Calendar as CalendarIcon, Clock } from 'lucide-react';
 import { MoodEntry } from '@/types';
 
 // Helper to get mood emoji
-const getMoodEmoji = (mood: string) => {
-  switch (mood) {
-    case 'happy': return '😊';
-    case 'excited': return '🤩';
-    case 'neutral': return '😐';
-    case 'tired': return '😴';
-    case 'sad': return '😢';
-    case 'angry': return '😡';
-    default: return '❓';
-  }
-};
 
 const getMoodColor = (mood: string) => {
   switch (mood) {
@@ -56,7 +46,7 @@ function HistoryCard({ entry }: { entry: MoodEntry }) {
         <CardContent className="p-6 md:p-8 flex flex-col md:flex-row gap-6">
           <div className="flex flex-col md:items-center min-w-[120px] shrink-0">
             <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-4xl mb-3 ${getMoodColor(entry.mood).split(' ').slice(0,2).join(' ')} shadow-inner`}>
-              {getMoodEmoji(entry.mood)}
+              {getCustomMoodIcon(entry.mood)}
             </div>
             <div className="text-sm font-medium capitalize">{entry.mood}</div>
             <div className="flex items-center text-xs text-muted-foreground mt-1 gap-1">
