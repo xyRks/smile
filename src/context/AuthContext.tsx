@@ -21,37 +21,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [users, setUsers] = useLocalStorage<User[]>('mood_diary_users', []);
   const [currentUserId, setCurrentUserId] = useLocalStorage<string | null>('mood_diary_current_user', null);
 
-
   const user = useMemo(() => {
     if (currentUserId && users.length > 0) {
-      return users.find(u => u.id === currentUserId) || null;
-    }
-    return null;
-  }, [currentUserId, users]);
-
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-
-    if (currentUserId && users.length > 0) {
-      const foundUser = users.find(u => u.id === currentUserId);
-
-      if (user?.id !== foundUser?.id) {
-         setUser(foundUser || null);
-      }
-    } else if (user !== null) {
-
-
-      // Ensure backwards compatibility with users created before the friends feature
+      const foundUser = users.find(u => u.id === currentUserId) || null;
       if (foundUser && !foundUser.friends) {
         foundUser.friends = [];
       }
-      setUser(foundUser || null);
-    } else {
- jules-1579299213238363583-cda1a344
-      setUser(null);
+      return foundUser;
     }
-  }, [currentUserId, users, user]);
+    return null;
+  }, [currentUserId, users]);
 
   const login = (username: string, passwordHash: string) => {
     const foundUser = users.find(u => u.username === username && u.passwordHash === passwordHash);
@@ -121,7 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

@@ -8,8 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MoodEntry } from '@/types';
-import { BlogPostCard } from '../profile/BlogPostCard';
-import { useProfileData } from '@/hooks/useProfileData';
 
 
 // Reusing helpers
@@ -33,7 +31,7 @@ export function FriendHistory() {
 
   const friend = users.find(u => u.id === id);
 
-  const { blogPosts, addReactionBefore, addReactionAfter } = useProfileData(id);
+
 
 
   // Security check: ensure they are actually friends
@@ -98,7 +96,7 @@ export function FriendHistory() {
                 <CardContent className="p-6 flex flex-col md:flex-row gap-6">
                   <div className="flex flex-col md:items-center min-w-[120px] shrink-0">
                     <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-4xl mb-3 ${getMoodColor(entry.mood).split(' ').slice(0,2).join(' ')} shadow-inner`}>
-                      {getCustomMoodIcon(entry.mood)}
+                      {entry.mood === "happy" ? "😊" : entry.mood === "sad" ? "😢" : entry.mood === "angry" ? "😠" : entry.mood === "tired" ? "😴" : entry.mood === "excited" ? "🤩" : "😐"}
                     </div>
                     <div className="text-sm font-medium capitalize">{entry.mood}</div>
                     <div className="flex items-center text-xs text-muted-foreground mt-1 gap-1">
@@ -130,14 +128,14 @@ export function FriendHistory() {
                       <div className="ml-auto flex items-center gap-1.5 text-xs font-medium bg-primary/5 text-primary px-2.5 py-1 rounded-md border border-primary/10">
                         <span className="text-amber-500">⚡</span> Energy: {entry.energyLevel}/5
                       </div>
+                    </div>
+                  </div>
                     </CardContent>
                   </Card>
                 </motion.div>
               ))}
             </div>
           )}
-        </div>
-      </div>
 
     </PageTransition>
   );

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocalStorage } from './useLocalStorage';
-import { Note, BlogPost, MoodReaction, MoodType } from '@/types';
+import { Note, BlogPost, MoodType } from '@/types';
 import { useAuth } from '@/context/AuthContext';
 import { v4 as uuidv4 } from 'uuid';
 
