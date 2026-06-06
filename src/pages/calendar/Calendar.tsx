@@ -29,14 +29,16 @@ export function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  const { monthStart, paddingDays, days } = useMemo(() => {
-    const start = startOfMonth(currentDate);
-    const end = endOfMonth(currentDate);
-    const startD = start.getDay();
-    const padding = Array.from({ length: startD === 0 ? 6 : startD - 1 }).map(() => null);
-    const d = eachDayOfInterval({ start, end });
-    return { monthStart: start, paddingDays: padding, days: d };
-  }, [currentDate]);
+  const monthStart = startOfMonth(currentDate);
+  const monthEnd = endOfMonth(currentDate);
+  const startDate = monthStart;
+  const endDate = monthEnd;
+
+  // Add padding days for visual calendar grid
+  const startDay = startDate.getDay();
+  const paddingDays = Array.from({ length: startDay === 0 ? 6 : startDay - 1 }).map(() => null);
+
+  const days = eachDayOfInterval({ start: startDate, end: endDate });
 
   const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
   const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));

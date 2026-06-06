@@ -27,7 +27,6 @@ const getMoodColor = (mood: string) => {
 export function Dashboard() {
   const { user } = useAuth();
   const { entries } = useMoodData();
-  // Calculate greeting
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
@@ -38,7 +37,7 @@ export function Dashboard() {
   // Calculate streak
   const streak = useMemo(() => {
     let currentStreak = 0;
-    // Sort ascending for streak check
+
     const sortedEntries = [...entries].sort((a, b) => a.timestamp - b.timestamp);
 
     if (sortedEntries.length > 0) {

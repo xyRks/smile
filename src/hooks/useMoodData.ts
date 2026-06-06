@@ -7,7 +7,10 @@ import { v4 as uuidv4 } from 'uuid';
 export function useMoodData() {
   const { user } = useAuth();
   const [allEntries, setAllEntries] = useLocalStorage<MoodEntry[]>('mood_diary_entries', []);
+
+
   // Filter entries for current user
+
   const userEntries = useMemo(() => {
     if (user) {
       const filtered = allEntries.filter(entry => entry.userId === user.id);

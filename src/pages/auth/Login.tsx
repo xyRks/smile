@@ -77,7 +77,7 @@ export function Login() {
               type="text"
               placeholder="e.g. johndoe"
               value={username}
-              onChange={(e: any) => setUsername(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
               required
               className="bg-background/50 backdrop-blur-sm border-white/20 focus-visible:ring-primary h-12"
             />
@@ -91,7 +91,7 @@ export function Login() {
               id="password"
               type="password"
               value={password}
-              onChange={(e: any) => setPassword(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               required
               className="bg-background/50 backdrop-blur-sm border-white/20 focus-visible:ring-primary h-12"
             />
