@@ -134,9 +134,6 @@ export function Analytics() {
                       contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                       labelStyle={{ color: 'var(--muted-foreground)', marginBottom: '4px' }}
 
-                      formatter={(value: unknown) => { if (typeof value === 'number') { return [value.toFixed(1), 'Avg Rating']; } return [String(value), 'Avg Rating']; }}
-
-
                       formatter={(value: any) => [typeof value === 'number' ? value.toFixed(1) : value, 'Avg Rating']}
 
                     />
